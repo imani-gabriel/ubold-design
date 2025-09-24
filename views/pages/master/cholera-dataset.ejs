@@ -1,0 +1,1005 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Jeu de données Choléra</h4>
+            </div>
+            <div class="card-body">
+                
+                <!-- Bouton pour ouvrir le modal d'ajout -->
+                <button type="button" class="btn btn-success btn-sm waves-effect text-white waves-light mb-3" data-bs-toggle="modal" data-bs-target="#addDataModal">
+                    <i class="bi bi-plus-circle"></i> Ajouter les données
+                </button>
+                <button id="export-excel-btn" type="button" class="btn btn-outline-success btn-sm waves-effect mb-3 ms-2">
+                    <i class="bi bi-file-earmark-excel"></i> Exporter en Excel
+                </button>
+
+                <!-- Modal d'ajout de données -->
+                <div class="modal fade" id="addDataModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Ajouter un enregistrement</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form id="addDataForm">
+                                <div class="modal-body p-4">
+                                    <h6 class="mb-3">Données temporelles</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="annee" class="form-label">Année</label>
+                                                <input type="number" class="form-control form-control-sm" id="annee" name="Annees" required min="2000" max="2050" placeholder="Ex: 2023">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="semaine" class="form-label">Semaine</label>
+                                                <input type="number" class="form-control form-control-sm" id="semaine" name="Semaines" required min="1" max="53" placeholder="Ex: 12">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <h6 class="mb-3">Données spatiales</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="province" class="form-label">Province</label>
+                                                <input type="text" class="form-control form-control-sm" id="province" name="Province" required placeholder="Ex: Kinshasa">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="dps" class="form-label">DPS</label>
+                                                <input type="text" class="form-control form-control-sm" id="dps" name="DPS" required placeholder="Ex: DPS Centre">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="mb-3">
+                                                <label for="zoneDeSante" class="form-label">Zone de Santé</label>
+                                                <input type="text" class="form-control form-control-sm" id="zoneDeSante" name="ZoneDeSante" required placeholder="Ex: Gombe">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="pop" class="form-label">Population</label>
+                                                <input type="number" class="form-control form-control-sm" id="pop" name="Pop" required min="0" placeholder="Ex: 100000">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <h6 class="mb-3">Données épidémiologiques</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="cas" class="form-label">Cas</label>
+                                                <input type="number" class="form-control form-control-sm" id="cas" name="Cas" required min="0" placeholder="Ex: 15">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="deces" class="form-label">Décès</label>
+                                                <input type="number" class="form-control form-control-sm" id="deces" name="Deces" required min="0" placeholder="Ex: 2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary btn-sm waves-effect" data-bs-dismiss="modal">Annuler</button>
+                                    <button type="submit" class="btn btn-success btn-sm waves-effect waves-light">Ajouter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal de prévisualisation avant confirmation -->
+                <div class="modal fade" id="previewDataModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Vérification des données saisies</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" id="previewDataContent">
+                                <!-- Les données seront insérées ici dynamiquement -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
+                                <button type="button" class="btn btn-success btn-sm" id="confirmAddDataBtn">Confirmer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <h5>Comment utiliser :</h5>
+                    <p>Cette page affiche les données brutes du fichier <code>cholera.json</code> directement depuis le navigateur.</p>
+                    <p>Pour accéder à cette page, utilisez l'URL : <code>/admin/cholera-dataset</code></p>
+                </div>
+                
+                <!-- Contrôles de filtre -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Filtres de recherche</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="mb-3">Période</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">Navigation par époque</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <label for="epoch-range" class="form-label">Naviguer dans le temps</label>
+                                        <div class="d-flex align-items-center">
+                                            <span id="current-epoch" class="me-3 fw-bold">-</span>
+                                            <input type="range" class="form-range form-control-sm" id="epoch-range" min="0" max="0" step="1" style="flex: 1;">
+                                        </div>
+                                        <div class="d-flex justify-content-between mt-1">
+                                            <small id="epoch-min">-</small>
+                                            <small id="epoch-max">-</small>
+                                        </div>
+                                        <div class="form-text">Faites glisser pour naviguer à travers les époques</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">Définir une plage d'années</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <label for="year-start" class="form-label">Année de début</label>
+                                                <input type="number" class="form-control form-control-sm" id="year-start" min="2000" max="2050" placeholder="Ex: 2010">
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="year-end" class="form-label">Année de fin</label>
+                                                <input type="number" class="form-control form-control-sm" id="year-end" min="2000" max="2050" placeholder="Ex: 2020">
+                                            </div>
+                                        </div>
+                                        <div class="mt-2">
+                                            <div class="small text-muted">
+                                                <div>Plage: <span id="year-range-display">-</span></div>
+                                                <div>Semaines: <span id="weeks-count">-</span></div>
+                                                <div>Actuel: <span id="current-week-display">-</span></div>
+                                            </div>
+                                        </div>
+                                        <div id="epoch-error" class="small mt-2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h6 class="mb-3">Filtres avancés</h6>
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label for="filter-annee" class="form-label">Année</label>
+                                <select id="filter-annee" class="form-select form-select-sm" multiple>
+                                    <option value="">Toutes les années</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="filter-semaine" class="form-label">Semaine</label>
+                                <select id="filter-semaine" class="form-select form-select-sm" multiple>
+                                    <option value="">Toutes les semaines</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="filter-province" class="form-label">Province</label>
+                                <select id="filter-province" class="form-select form-select-sm" multiple>
+                                    <option value="">Toutes les provinces</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="filter-dps" class="form-label">DPS</label>
+                                <select id="filter-dps" class="form-select form-select-sm" multiple>
+                                    <option value="">Tous les DPS</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="filter-zone-sante" class="form-label">Zone de Santé</label>
+                                <select id="filter-zone-sante" class="form-select form-select-sm" multiple>
+                                    <option value="">Toutes les zones</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="filter-cas-min" class="form-label">Cas (min)</label>
+                                <input type="number" class="form-control form-control-sm mb-1" id="filter-cas-min" placeholder="Min">
+                                <input type="number" class="form-control form-control-sm" id="filter-cas-equal" placeholder="Égal à">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="filter-cas-max" class="form-label">Cas (max)</label>
+                                <input type="number" class="form-control form-control-sm" id="filter-cas-max" placeholder="Max">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="filter-deces-min" class="form-label">Décès (min)</label>
+                                <input type="number" class="form-control form-control-sm mb-1" id="filter-deces-min" placeholder="Min">
+                                <input type="number" class="form-control form-control-sm" id="filter-deces-equal" placeholder="Égal à">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="filter-deces-max" class="form-label">Décès (max)</label>
+                                <input type="number" class="form-control form-control-sm" id="filter-deces-max" placeholder="Max">
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <button id="apply-filters" class="btn btn-primary me-2 btn-sm">
+                                    <i class="ri-filter-line align-middle me-1"></i> Appliquer les filtres
+                                </button>
+                                <button id="reset-filters" class="btn btn-outline-secondary btn-sm">
+                                    <i class="ri-refresh-line align-middle me-1"></i> Réinitialiser
+                                </button>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tableau des résultats -->
+                <div id="table-results">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Chargement...</span>
+                        </div>
+                        <p class="mt-2">Chargement des données en cours...</p>
+                    </div>
+                </div>
+                
+                <div id="error-message" class="alert alert-danger d-none mt-3" role="alert">
+                    <!-- Les messages d'erreur seront affichés ici -->
+                </div>
+                
+                <!-- Pagination -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div id="total-items" class="text-muted">Chargement...</div>
+                    <div class="pagination">
+                        <button id="prev-page" class="btn btn-outline-primary me-2 btn-sm">
+                            <i class="ri-arrow-left-line"></i> Précédent
+                        </button>
+                        <span id="page-info" class="mx-2">Page 1 sur 1</span>
+                        <button id="next-page" class="btn btn-outline-primary ms-2 btn-sm">
+                            Suivant <i class="ri-arrow-right-line"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ajout du script SheetJS (XLSX) en global avant le module -->
+<script src="/js/xlsx.full.min.js"></script>
+
+<!-- Chargement du module d'analyse -->
+<script type="module">
+    import { 
+        analyzeCholeraData, 
+        renderTable,
+        updateFilterOptions,
+        applyFilters as applyCholeraFilters,
+        handleFilterChange,
+        displayDescriptiveStats,
+        addPaginationEventListeners,
+        updateTableDisplay
+    } from '/js/modules/choleraAnalysis.js';
+    
+    // Fonction pour gérer l'exclusivité entre les champs de plage et d'égalité
+    const setupExclusiveFilters = () => {
+        // Gestion des champs pour les cas
+        const casMin = document.getElementById('filter-cas-min');
+        const casMax = document.getElementById('filter-cas-max');
+        const casEqual = document.getElementById('filter-cas-equal');
+        
+        // Gestion des champs pour les décès
+        const decesMin = document.getElementById('filter-deces-min');
+        const decesMax = document.getElementById('filter-deces-max');
+        const decesEqual = document.getElementById('filter-deces-equal');
+        
+        // Fonction pour vider les champs de plage quand on utilise le champ égal
+        const handleEqualChange = (equalField, minField, maxField) => {
+            if (equalField.value) {
+                minField.value = '';
+                maxField.value = '';
+            }
+        };
+        
+        // Fonction pour vider le champ égal quand on utilise les champs de plage
+        const handleRangeChange = (equalField) => {
+            if (equalField.value) {
+                equalField.value = '';
+            }
+        };
+        
+        // Écouteurs pour les champs de cas
+        if (casEqual) {
+            casEqual.addEventListener('input', () => {
+                handleEqualChange(casEqual, casMin, casMax);
+                applyAllFilters();
+            });
+        }
+        
+        if (casMin || casMax) {
+            const handleCasRangeChange = () => {
+                if (casEqual && (casMin.value || casMax.value)) {
+                    casEqual.value = '';
+                }
+                applyAllFilters();
+            };
+            
+            if (casMin) casMin.addEventListener('input', handleCasRangeChange);
+            if (casMax) casMax.addEventListener('input', handleCasRangeChange);
+        }
+        
+        // Écouteurs pour les champs de décès
+        if (decesEqual) {
+            decesEqual.addEventListener('input', () => {
+                handleEqualChange(decesEqual, decesMin, decesMax);
+                applyAllFilters();
+            });
+        }
+        
+        if (decesMin || decesMax) {
+            const handleDecesRangeChange = () => {
+                if (decesEqual && (decesMin.value || decesMax.value)) {
+                    decesEqual.value = '';
+                }
+                applyAllFilters();
+            };
+            
+            if (decesMin) decesMin.addEventListener('input', handleDecesRangeChange);
+            if (decesMax) decesMax.addEventListener('input', handleDecesRangeChange);
+        }
+    };
+    
+    // Déclarer la variable data au niveau du module pour qu'elle soit accessible partout
+    let globalData = [];
+    document.addEventListener('DOMContentLoaded', async () => {
+        console.log('Chargement de la page cholera-dataset.ejs');
+        
+        try {
+            // Afficher le spinner de chargement
+            const resultsEl = document.getElementById('table-results');
+            if (resultsEl) {
+                resultsEl.innerHTML = `
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Chargement...</span>
+                        </div>
+                        <p class="mt-2">Chargement des données en cours...</p>
+                    </div>
+                `;
+            }
+            
+            // Lancer l'analyse automatiquement au chargement de la page
+            console.log('Appel de analyzeCholeraData()...');
+            globalData = await analyzeCholeraData();
+            console.log('Données reçues:', globalData);
+            
+            if (!globalData || !Array.isArray(globalData) || globalData.length === 0) {
+                throw new Error('Aucune donnée valide reçue du serveur');
+            }
+            
+            // Mettre à jour les options des filtres avec les données chargées
+            updateFilterOptions(globalData);
+            
+            // Initialiser le sélecteur de plage d'époques
+            if (typeof initEpochRange === 'function') {
+                initEpochRange(globalData);
+            }
+            
+            // Afficher le tableau avec les données et la pagination (50 éléments par page par défaut)
+            console.log('Appel de renderTable avec pagination...');
+            const tableContainer = document.getElementById('table-results');
+            if (tableContainer) {
+                tableContainer.innerHTML = renderTable(globalData, 1, 50);
+                
+                // Initialiser les gestionnaires d'événements de pagination
+                if (typeof addPaginationEventListeners === 'function') {
+                    addPaginationEventListeners(globalData, 50);
+                } else {
+                    console.warn('La fonction addPaginationEventListeners n\'est pas disponible');
+                }
+            }
+            
+            // Cacher le message d'erreur s'il est affiché
+            const errorEl = document.getElementById('error-message');
+            if (errorEl) {
+                errorEl.classList.add('d-none');
+            }
+            
+            // Initialiser les gestionnaires d'événements pour les filtres exclusifs
+            setupExclusiveFilters();
+            
+        } catch (error) {
+            console.error('Erreur:', error);
+            const errorEl = document.getElementById('error-message');
+            if (errorEl) {
+                errorEl.textContent = `Erreur: ${error.message}`;
+                errorEl.classList.remove('d-none');
+                
+                // Afficher un message plus convivial pour l'utilisateur
+                const resultsEl = document.getElementById('table-results');
+                if (resultsEl) {
+                    resultsEl.innerHTML = `
+                        <div class="alert alert-warning">
+                            <h5>Impossible de charger les données</h5>
+                            <p>Veuillez vérifier que le fichier <code>cholera.json</code> existe dans le dossier <code>public/docs/</code>.</p>
+                            <p class="mb-0">Détails de l'erreur : ${error.message}</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+    });
+    
+    // Fonction pour mettre à jour les options des filtres dépendants
+    const updateDependentFilters = () => {
+        updateFilterOptions(globalData);
+    };
+    
+    // Mettre à jour dynamiquement les options des filtres dépendants
+    const filterSelects = ['filter-province', 'filter-dps'];
+    
+    // Fonction pour appliquer les filtres avec gestion des dépendances
+    const applyAllFilters = () => {
+        // Afficher un indicateur de chargement
+        const container = document.getElementById('table-results');
+        const loadingHtml = `
+            <div class="text-center py-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                </div>
+                <p class="mt-2">Application des filtres en cours...</p>
+            </div>
+        `;
+        
+        if (container) container.innerHTML = loadingHtml;
+        
+        // Mettre à jour d'abord les options des filtres dépendants
+        updateFilterOptions(globalData, true);
+        
+        // Appliquer les filtres après un court délai pour permettre l'interface de se mettre à jour
+        setTimeout(() => {
+            try {
+                // Appliquer les filtres combinés
+                const filteredData = applyCholeraFilters(globalData);
+                
+                // Mettre à jour le compteur de résultats
+                const resultCount = document.getElementById('filtered-count');
+                if (resultCount) {
+                    resultCount.textContent = filteredData.length;
+                }
+                
+                // Afficher les résultats filtrés
+                const tableContainer = document.getElementById('table-results');
+                if (tableContainer) {
+                    tableContainer.innerHTML = renderTable(filteredData, 1, 50);
+                }
+                
+                // Mettre à jour les statistiques
+                const statsContainer = document.getElementById('stats-container');
+                if (statsContainer) {
+                    displayDescriptiveStats(filteredData, statsContainer);
+                }
+                
+                // Faire défiler vers le haut des résultats
+                container?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+            } catch (error) {
+                console.error('Erreur lors de l\'application des filtres:', error);
+                if (container) {
+                    container.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Erreur lors de l'application des filtres: ${error.message}
+                        </div>
+                    `;
+                }
+            }
+        }, 100);
+    };
+
+    // Fonction pour gérer les changements de filtre avec délai
+    const handleLocalFilterChange = (input) => {
+        clearTimeout(input._timeout);
+        input._timeout = setTimeout(() => {
+            // Utiliser la fonction handleFilterChange importée du module
+            handleFilterChange(globalData);
+        }, 300);
+    };
+    
+    // Ajouter des écouteurs d'événements pour chaque filtre
+    const filterInputs = [
+        'filter-annee', 'filter-semaine', 'filter-province', 
+        'filter-dps', 'filter-zone-sante', 'filter-cas-min', 
+        'filter-cas-max', 'filter-deces-min', 'filter-deces-max', 'search-input'
+    ];
+    
+    filterInputs.forEach(inputId => {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        
+        // Pour les champs texte et numériques, on attend que l'utilisateur ait fini de taper
+        if (input.type === 'text' || input.type === 'number') {
+            input.addEventListener('input', () => handleLocalFilterChange(input));
+        } else if (input.type === 'select-one' || input.type === 'select-multiple') {
+            // Correction : appliquer aussi sur les selects multiples
+            input.addEventListener('change', applyAllFilters);
+        }
+    });
+    
+    // Mise à jour des filtres dépendants
+    const dependentFilters = {
+        'filter-province': ['filter-dps', 'filter-zone-sante'],
+        'filter-dps': ['filter-zone-sante']
+    };
+    
+    Object.entries(dependentFilters).forEach(([parentId, childrenIds]) => {
+        const parent = document.getElementById(parentId);
+        if (parent) {
+            parent.addEventListener('change', () => {
+                // Réinitialiser les filtres enfants
+                childrenIds.forEach(childId => {
+                    const child = document.getElementById(childId);
+                    if (child) child.value = '';
+                });
+                applyAllFilters();
+            });
+        }
+    });
+    
+    // Gestion du sélecteur de plage d'époques (année/semaine)
+    const epochRange = document.getElementById('epoch-range');
+    const currentEpochDisplay = document.getElementById('current-epoch');
+    const epochMinDisplay = document.getElementById('epoch-min');
+    const epochMaxDisplay = document.getElementById('epoch-max');
+    
+    // Éléments pour la sélection de plage d'années
+    const yearStartInput = document.getElementById('year-start');
+    const yearEndInput = document.getElementById('year-end');
+    const yearRangeDisplay = document.getElementById('year-range-display');
+    const weeksCountDisplay = document.getElementById('weeks-count');
+    const currentWeekDisplay = document.getElementById('current-week-display');
+    
+    // Variables pour stocker les années min/max disponibles
+    let minYear = 2000;
+    let maxYear = new Date().getFullYear();
+    let currentYearRange = [minYear, maxYear];
+    let filteredEpochs = [];
+    
+    // Variable pour stocker les époques uniques
+    let uniqueEpochs = [];
+    
+    // Fonction pour extraire les époques uniques (année/semaine) des données
+    const extractUniqueEpochs = (data) => {
+        const epochs = new Set();
+        
+        data.forEach(item => {
+            if (item.Annees && item.Semaines) {
+                epochs.add(`${item.Annees}-${item.Semaines.toString().padStart(2, '0')}`);
+            }
+        });
+        
+        // Trier les époques par année puis par semaine
+        return Array.from(epochs).sort((a, b) => a.localeCompare(b));
+    };
+    
+    // Fonction pour mettre à jour l'affichage de l'époque actuelle
+    const updateEpochDisplay = (epochIndex) => {
+        if (!uniqueEpochs || !uniqueEpochs.length) {
+            currentEpochDisplay.textContent = 'Aucune donnée disponible';
+            updateErrorDisplay('Aucune donnée d\'époque disponible');
+            return;
+        }
+        
+        // S'assurer que l'index est dans les limites
+        const safeIndex = Math.max(0, Math.min(epochIndex, uniqueEpochs.length - 1));
+        const currentEpoch = uniqueEpochs[safeIndex];
+        
+        if (!currentEpoch) {
+            updateErrorDisplay('Époque non définie dans la base de données');
+            return;
+        }
+        
+        const [year, week] = currentEpoch.split('-');
+        currentEpochDisplay.textContent = `Année: ${year}, Semaine: ${parseInt(week)}`;
+        
+        // Mettre à jour l'affichage de la semaine actuelle
+        updateCurrentWeekDisplay(safeIndex);
+        
+        // Mettre à jour les sélecteurs d'année et de semaine
+        const yearSelect = document.getElementById('filter-annee');
+        const weekSelect = document.getElementById('filter-semaine');
+        
+        if (yearSelect) yearSelect.value = year;
+        if (weekSelect) weekSelect.value = parseInt(week);
+        
+        // Mettre à jour l'index du curseur
+        if (epochRange) {
+            epochRange.value = safeIndex;
+        }
+        
+        // Mettre à jour l'affichage de la plage
+        updateRangeDisplay();
+        
+        // Déclencher le filtrage
+        applyAllFilters();
+        
+        // Effacer les messages d'erreur s'il y en a
+        updateErrorDisplay('', false);
+    };
+    
+    // Fonction pour extraire les années uniques des données
+    const extractYears = (data) => {
+        const years = new Set();
+        data.forEach(item => {
+            if (item.Annees) {
+                years.add(parseInt(item.Annees));
+            }
+        });
+        return Array.from(years).sort((a, b) => a - b);
+    };
+    
+    // Mettre à jour les limites des champs d'années
+    const updateYearInputsLimits = (years) => {
+        if (years.length === 0) return;
+        
+        minYear = years[0];
+        maxYear = years[years.length - 1];
+        
+        if (yearStartInput && yearEndInput) {
+            yearStartInput.min = minYear;
+            yearStartInput.max = maxYear;
+            yearEndInput.min = minYear;
+            yearEndInput.max = maxYear;
+            
+            // Définir les valeurs par défaut (toutes les années)
+            yearStartInput.value = minYear;
+            yearEndInput.value = maxYear;
+        }
+    };
+    
+    // Vérifier si une époque est valide
+    const isEpochValid = (epoch) => {
+        if (!epoch || !uniqueEpochs || uniqueEpochs.length === 0) return false;
+        return uniqueEpochs.some(e => e === epoch);
+    };
+    
+    // Mettre à jour l'affichage des messages d'erreur
+    const updateErrorDisplay = (message, isError = true) => {
+        const errorDisplay = document.getElementById('epoch-error');
+        if (errorDisplay) {
+            errorDisplay.textContent = message;
+            errorDisplay.className = isError ? 'text-danger' : 'text-success';
+        }
+        
+        // Cacher le message après 5 secondes
+        if (message) {
+            setTimeout(() => {
+                if (errorDisplay) errorDisplay.textContent = '';
+            }, 5000);
+        }
+    };
+    
+    // Mettre à jour l'affichage des informations de plage
+    const updateRangeDisplay = () => {
+        if (!filteredEpochs || filteredEpochs.length === 0) {
+            yearRangeDisplay.textContent = `${minYear}-${maxYear}`;
+            weeksCountDisplay.textContent = uniqueEpochs.length;
+            return;
+        }
+        
+        const startYear = parseInt(yearStartInput.value) || minYear;
+        const endYear = parseInt(yearEndInput.value) || maxYear;
+        
+        // Mettre à jour l'affichage de la plage
+        yearRangeDisplay.textContent = `${startYear}-${endYear}`;
+        
+        // Compter le nombre de semaines dans la plage
+        const weeksInRange = filteredEpochs.length;
+        weeksCountDisplay.textContent = weeksInRange;
+    };
+    
+    // Mettre à jour l'affichage de la semaine actuelle
+    const updateCurrentWeekDisplay = (epochIndex) => {
+        if (!uniqueEpochs || !uniqueEpochs[epochIndex]) {
+            currentWeekDisplay.textContent = '-';
+            return;
+        }
+        
+        const [year, week] = uniqueEpochs[epochIndex].split('-');
+        currentWeekDisplay.textContent = `S${week} - ${year}`;
+    };
+    
+    // Filtrer les époques en fonction de la plage d'années
+    const filterEpochsByYearRange = (startYear, endYear) => {
+        if (!uniqueEpochs || uniqueEpochs.length === 0) return [];
+        
+        return uniqueEpochs.filter(epoch => {
+            const year = parseInt(epoch.split('-')[0]);
+            return year >= startYear && year <= endYear;
+        });
+    };
+    
+    // Gérer les changements de plage d'années
+    const handleYearRangeChange = () => {
+        const startYear = parseInt(yearStartInput.value) || minYear;
+        const endYear = parseInt(yearEndInput.value) || maxYear;
+        
+        // Validation des entrées
+        if (isNaN(startYear) || isNaN(endYear)) {
+            updateErrorDisplay("Veuillez entrer des années valides");
+            return;
+        }
+        
+        if (startYear > endYear) {
+            updateErrorDisplay("L'année de début doit être inférieure ou égale à l'année de fin");
+            return;
+        }
+        
+        if (startYear < minYear || endYear > maxYear) {
+            updateErrorDisplay(`La plage doit être comprise entre ${minYear} et ${maxYear}`);
+            return;
+        }
+        
+        // Mettre à jour la plage d'années courante
+        currentYearRange = [startYear, endYear];
+        
+        // Filtrer les époques
+        filteredEpochs = filterEpochsByYearRange(startYear, endYear);
+        
+        if (filteredEpochs.length === 0) {
+            updateErrorDisplay("Aucune donnée disponible pour la plage sélectionnée");
+            return;
+        }
+        
+        // Mettre à jour l'affichage
+        updateRangeDisplay();
+        
+        // Mettre à jour les limites du curseur
+        const startEpoch = filteredEpochs[0];
+        const endEpoch = filteredEpochs[filteredEpochs.length - 1];
+        const startIndex = uniqueEpochs.indexOf(startEpoch);
+        const endIndex = uniqueEpochs.indexOf(endEpoch);
+        
+        epochRange.min = startIndex;
+        epochRange.max = endIndex;
+        
+        // Mettre à jour l'affichage des limites
+        epochMinDisplay.textContent = startEpoch;
+        epochMaxDisplay.textContent = endEpoch;
+        
+        // Mettre à jour la position du curseur si nécessaire
+        const currentIndex = parseInt(epochRange.value) || 0;
+        if (currentIndex < startIndex || currentIndex > endIndex) {
+            epochRange.value = endIndex;
+            updateEpochDisplay(endIndex);
+        } else {
+            // Mettre à jour l'affichage de la semaine actuelle
+            updateCurrentWeekDisplay(currentIndex);
+        }
+        
+        // Mettre à jour les filtres
+        applyAllFilters();
+    };
+    
+    // Initialiser le sélecteur de plage d'époques
+    const initEpochRange = (data) => {
+        uniqueEpochs = extractUniqueEpochs(data);
+        
+        // Extraire et mettre à jour les années disponibles
+        const years = extractYears(data);
+        updateYearInputsLimits(years);
+        
+        // Initialiser les époques filtrées avec toutes les époques
+        filteredEpochs = [...uniqueEpochs];
+        
+        if (uniqueEpochs.length > 0) {
+            // Mettre à jour les valeurs min/max du range input
+            epochRange.min = 0;
+            epochRange.max = uniqueEpochs.length - 1;
+            epochRange.value = uniqueEpochs.length - 1; // Par défaut, la dernière époque
+            
+            // Mettre à jour les affichages
+            epochMinDisplay.textContent = uniqueEpochs[0];
+            epochMaxDisplay.textContent = uniqueEpochs[uniqueEpochs.length - 1];
+            
+            // Mettre à jour l'affichage des informations de plage
+            updateRangeDisplay();
+            
+            // Afficher l'époque actuelle
+            updateEpochDisplay(uniqueEpochs.length - 1);
+            
+            // Initialiser les écouteurs d'événements pour les filtres
+            document.querySelectorAll('select[id^="filter-"]').forEach(select => {
+                select.addEventListener('change', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Empêcher le défilement
+                    const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+                    
+                    // Appliquer les filtres
+                    applyAllFilters();
+                    
+                    // Maintenir la position de défilement
+                    window.scrollTo(0, scrollPosition);
+                });
+                
+                // Empêcher le comportement par défaut de la touche Entrée
+                select.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                });
+            });
+            
+            // Ajouter des écouteurs d'événements pour le déplacement du curseur
+            epochRange.addEventListener('input', (e) => {
+                const index = parseInt(e.target.value);
+                updateEpochDisplay(index);
+                updateCurrentWeekDisplay(index);
+            });
+            
+            // Ajouter des écouteurs d'événements pour les champs d'années
+            [yearStartInput, yearEndInput].forEach(input => {
+                if (input) {
+                    input.addEventListener('input', () => handleYearRangeChange());
+                }
+            });
+            
+            // Activer les contrôles
+            epochRange.disabled = false;
+            if (yearStartInput) yearStartInput.disabled = false;
+            if (yearEndInput) yearEndInput.disabled = false;
+        } else {
+            // Désactiver le contrôle si aucune donnée
+            epochRange.disabled = true;
+            currentEpochDisplay.textContent = 'Aucune donnée disponible';
+        }
+    };
+    
+    // Pour le bouton de réinitialisation
+    const resetButton = document.getElementById('reset-filters');
+    if (resetButton) {
+        resetButton.addEventListener('click', () => {
+            // Afficher un indicateur de chargement
+            const container = document.getElementById('table-results');
+            if (container) {
+                container.innerHTML = `
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Réinitialisation...</span>
+                        </div>
+                        <p class="mt-2">Réinitialisation des filtres en cours...</p>
+                    </div>
+                `;
+            }
+            
+            // Réinitialiser tous les champs après un court délai
+            setTimeout(() => {
+                // Réinitialiser tous les champs de formulaire
+                document.querySelectorAll('select, input[type="text"], input[type="number"]').forEach(el => {
+                    el.value = '';
+                });
+                
+                // Réinitialiser le sélecteur de plage d'époques
+                if (epochRange && uniqueEpochs && uniqueEpochs.length > 0) {
+                    // Réinitialiser les limites du curseur
+                    epochRange.min = 0;
+                    epochRange.max = uniqueEpochs.length - 1;
+                    epochRange.value = uniqueEpochs.length - 1;
+                    
+                    // Mettre à jour l'affichage
+                    updateEpochDisplay(uniqueEpochs.length - 1);
+                    
+                    // Réinitialiser les champs de plage d'années
+                    if (yearStartInput && yearEndInput) {
+                        yearStartInput.value = minYear;
+                        yearEndInput.value = maxYear;
+                    }
+                }
+                
+                // Mettre à jour les options des filtres sans préserver les sélections
+                updateFilterOptions(globalData, false);
+                
+                // Mettre à jour le compteur de résultats
+                const filteredCount = document.getElementById('filtered-count');
+                if (filteredCount) {
+                    filteredCount.textContent = globalData.length;
+                }
+                
+                // Réafficher toutes les données avec la pagination
+                const tableContainer = document.getElementById('table-results');
+                if (tableContainer) {
+                    try {
+                        // Utiliser updateTableDisplay pour initialiser correctement la pagination
+                        if (typeof updateTableDisplay === 'function') {
+                            updateTableDisplay(globalData, 1, 50, true);
+                        } else if (typeof renderTable === 'function') {
+                            // Fallback si updateTableDisplay n'est pas disponible
+                            tableContainer.innerHTML = renderTable(globalData, 1, 50);
+                            if (typeof addPaginationEventListeners === 'function') {
+                                addPaginationEventListeners(globalData, 50);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Erreur lors de l\'initialisation de la pagination:', error);
+                        tableContainer.innerHTML = `
+                            <div class="alert alert-danger">
+                                Une erreur est survenue lors du chargement des données. Veuillez rafraîchir la page.
+                            </div>
+                        `;
+                    }
+                }
+                
+                // Faire défiler vers le haut des résultats
+                container?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+            }, 100);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const addDataForm = document.getElementById('addDataForm');
+        const previewDataModal = new bootstrap.Modal(document.getElementById('previewDataModal'));
+        const addDataModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('addDataModal'));
+        const previewDataContent = document.getElementById('previewDataContent');
+        const confirmAddDataBtn = document.getElementById('confirmAddDataBtn');
+
+        let formDataCache = null;
+
+        addDataForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Récupérer les valeurs du formulaire
+            const formData = new FormData(addDataForm);
+            formDataCache = Object.fromEntries(formData.entries());
+            // Générer le HTML de prévisualisation
+            previewDataContent.innerHTML = previsualizeCreateCholeraData(formDataCache);
+            // Fermer le premier modal et ouvrir le modal de prévisualisation
+            addDataModal.hide();
+            setTimeout(() => previewDataModal.show(), 400);
+        });
+
+        confirmAddDataBtn.addEventListener('click', function() {
+            // Ici, tu peux ajouter la logique pour ajouter la donnée (dans le tableau ou via API)
+            // Exemple : afficher une notification toast de succès
+            previewDataModal.hide();
+            createCholeraData(formDataCache);
+        });
+    });
+
+    // --- Export Excel ---
+    // Utiliser window.XLSX (global) car xlsx.full.min.js n'est pas un module ES
+    const exportBtn = document.getElementById('export-excel-btn');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', () => {
+            const XLSX = window.XLSX;
+            if (!XLSX) {
+                alert('La librairie XLSX n\'est pas chargée.');
+                return;
+            }
+            // Appliquer les filtres pour obtenir toutes les données filtrées
+            let dataToExport = globalData;
+            if (typeof applyCholeraFilters === 'function') {
+                try {
+                    dataToExport = applyCholeraFilters(globalData);
+                } catch (e) {}
+            }
+            if (!dataToExport || !Array.isArray(dataToExport) || dataToExport.length === 0) {
+                alert('Aucune donnée à exporter.');
+                return;
+            }
+            // Générer la feuille Excel avec toutes les données filtrées
+            const ws = XLSX.utils.json_to_sheet(dataToExport);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'CholeraData');
+            XLSX.writeFile(wb, 'cholera-dataset.xlsx');
+        });
+    }
+</script>

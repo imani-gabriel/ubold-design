@@ -1,0 +1,14 @@
+<!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+    
+    <script src="/admin/starter/js/jquery-3.1.1.js" crossorigin="anonymous"></script>
+    <script src="/admin/starter/lib/socket.io/socket.io.min.js" crossorigin="anonymous"></script>
+    <!-- Inclure Feather -->
+
+    <script>
+        const sio = io('/')
+        sio.emit('news')
+    </script>
+
+</body></html>

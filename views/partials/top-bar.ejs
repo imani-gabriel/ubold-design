@@ -1,0 +1,136 @@
+<div class="navbar-custom">
+    <div class="topbar">
+        <div class="topbar-menu d-flex align-items-center gap-1">
+
+
+            <!-- Sidebar Menu Toggle Button -->
+            <button class="button-toggle-menu">
+                <i class="bi bi-list"></i>
+            </button>
+            <a class="btn btn-soft-info waves-effect waves-light btn-sm" href="../cholera-dataset/"><i class="bi bi-database-fill"></i> Gestion de bases de données</a>
+            <a class="btn btn-soft-info waves-effect waves-light btn-sm" href="../cholera-analysis/"><i class="bi bi-bar-chart-fill"></i> Graphiques et statistiques</a>
+            <a class="btn btn-soft-info waves-effect waves-light btn-sm" href="../starter/"><i class="bi bi-map-fill"></i> Cartographie</a>
+
+
+            <!-- Mega Menu Dropdown -->
+            <div class="dropdown dropdown-mega d-none d-xl-block">
+                <a class="nav-link dropdown-toggle waves-effect waves-light" data-bs-toggle="dropdown" href="#"
+                    role="button" aria-haspopup="false" aria-expanded="false">
+                    Utilitaires
+                    <i class="bi bi-chevron-down  ms-1"></i>
+                </a>
+                <div class="dropdown-menu dropdown-megamenu">
+                    <div class="row">
+                        <div class="col-sm-8">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h5 class="text-dark mt-0">Nettoyages</h5>
+                                    <ul class="list-unstyled megamenu-list">
+                                        <li>
+                                            <a href="#!" data-bs-toggle="modal"
+                                                data-bs-target="#upload-file-to-analyse"><i
+                                                    class="bi bi-upload"></i>Recharge Fichier</a>
+                                        </li>
+                                        <li>
+                                            <a href="extended-nestable.html">Extractions</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">Verification</a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <h5 class="text-dark mt-0">Graphique</h5>
+                                    <ul class="list-unstyled megamenu-list">
+                                        <li>
+                                            <a href="ecommerce-products.html">Cartographie</a>
+                                        </li>
+                                        <li>
+                                            <a href="crm-dashboard.html">Statistiques</a>
+                                        </li>
+                                        <li>
+                                            <a href="email-inbox.html">Autres</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <h5 class="text-dark mt-0">Recolte de données</h5>
+                                    <ul class="list-unstyled megamenu-list">
+                                        <li>
+                                            <a href="javascript:void(0);">Creer une enquette</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">Ajuster les formulaires</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);">Affectation des enquetes</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="text-center mt-3">
+                                <h3 class="text-dark">Les fonctionnalites</h3>
+                                <h4>nouveaute</h4>
+                                <a href="javascript:void(0);" class="btn btn-primary rounded-pill btn-sm mt-3">Bientôt en dispo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ul class="topbar-menu d-flex align-items-center">
+            
+            <!-- Fullscreen Button -->
+            <li class="d-none d-md-inline-block">
+                <a class="nav-link waves-effect waves-light" href="" data-toggle="fullscreen">
+                    <i class="bi bi-fullscreen font-22"></i>
+                </a>
+            </li>
+
+            <!-- App Dropdown -->
+            <li class="dropdown d-none d-md-inline-block">
+                <a class="nav-link dropdown-toggle waves-effect waves-light arrow-none" data-bs-toggle="dropdown"
+                    href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                    <i class="bi bi-grid font-22"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg p-0">
+
+                    <div class="p-2">
+                        <div class="row g-0">
+                            <div class="col">
+                                <a class="dropdown-icon-item" href="#">
+                                    <img src="./img/ico/cholera.png" alt="cholera">
+                                    <span>Cholera</span>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a class="dropdown-icon-item" href="#">
+                                    <img src="./img/ico/inondation-1.png" alt="Inondation">
+                                    <span>Inondation</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+
+           
+            <!-- Light/Dark Mode Toggle Button -->
+            <li class="d-none d-sm-inline-block">
+                <div class="nav-link waves-effect waves-light" id="light-dark-mode">
+                    <i class="bi bi-moon font-22"></i>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+</div>
+<%- include('./upload-file-to-analyse'); -%>

@@ -1,0 +1,18 @@
+<!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+    
+
+
+    <script src="./js/jquery-3.1.1.js" crossorigin="anonymous"></script>
+    <script src="./lib/socket.io/socket.io.min.js" crossorigin="anonymous">
+    </script><script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script type="text/javascript" src="./js/data.js"></script>
+    <script type="module" src="./js/main.js"></script>
+    <script type="text/javascript" src="./js/master.js"></script>
+    <script>
+        const sio = io('/')
+        sio.emit('news')
+    </script>
+
+</body></html>

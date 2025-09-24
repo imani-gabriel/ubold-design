@@ -1,0 +1,42 @@
+<div class="user-profil user-profil-read ">
+    <a href="#!" class="btn btn-danger btn-sm close"><span class="icon icon-cancel-circle"></span></a>
+    <form id="data-read-prifil" onsubmit="return createUser(this)">
+        <header>
+            <aside class="user-avatar-img">
+            </aside>
+            <p class="field-avatar">
+                <label for="user-avatar">
+                    <span class="glyphicon icon-image"></span>
+                </label>
+                <input type="file" id="user-avatar" name="obsFile">
+                <button type="button" class="glyphicon glyphicon-camera"></button>
+            </p>
+        </header>
+        <div class="u-p-body">
+            <p class="fields">
+                <input type="text" class="form-control form-control-sm" name="name" id="name" placeholder="Nom de l'utilisateur">
+            </p>
+            <p class="fields">
+                <input type="text" class="form-control form-control-sm" name="lastname" id="lastname" placeholder="Post-nom de l'utilisateur">
+            </p>
+            <p class="fields">
+                <input type="text" class="form-control form-control-sm" name="firstname" id="firstname" placeholder="Prénom de l'utilisateur">
+            </p>
+            <p class="fields">
+                <input type="tel" class="form-control form-control-sm" name="phone" id="userPhone" placeholder="Numéro de téléphone">
+            </p>
+            <p class="fields">
+                <input type="email" class="form-control form-control-sm" name="mail" id="userMail" placeholder="Votre adresse mail au complet">
+            </p>
+            <p class="fields">
+                <select class="form-select form-select-sm" name="userRole" id="userRole">
+                    <option value="0">Role utilisateur</option>
+                    <option value="ADMIN">Administrateur</option>
+                    <option value="DATA-ADMIN">Chef d'équipe</option>
+                    <option value="INVITED">Invité</option>
+                </select>
+            </p>
+        </div>
+        <div class="footer"><button type="submit" class="btn btn-sm btn-success">Enregistrer</button></div>
+    </form>
+</div>

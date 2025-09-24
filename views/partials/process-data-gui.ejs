@@ -1,0 +1,100 @@
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
+    id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel" aria-modal="true" role="dialog">
+    <div class="offcanvas-header">
+        <h4 class="offcanvas-title">Filtres d'analyse</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
+    </div>
+    <div class="offcanvas-body p-4">
+        <form>
+            <div class="row">
+                <div class="col-12 col-md-6 mb-2">
+                    <label for="filter-annee" class="form-label">Année</label>
+                    <select class="form-select form-select-sm" id="filter-annee" multiple size="4">
+                        <option value="">Toutes les années</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-6 mb-2">
+                    <label for="filter-semaine" class="form-label">Semaine</label>
+                    <select class="form-select form-select-sm" id="filter-semaine" multiple size="4">
+                        <option value="">Toutes les semaines</option>
+                        <% for(let i=1; i<=52; i++) { %>
+                            <option value="<%= i %>">S<%= String(i).padStart(2, '0') %></option>
+                        <% } %>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-6 mb-2">
+                    <label for="filter-province" class="form-label">Province</label>
+                    <select class="form-select form-select-sm" id="filter-province" multiple size="4">
+                        <option value="">Toutes les provinces</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-6 mb-2">
+                    <label for="filter-dps" class="form-label">DPS</label>
+                    <select class="form-select form-select-sm" id="filter-dps" multiple size="4">
+                        <option value="">Tous les DPS</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 mb-2">
+                    <label for="filter-zone-sante" class="form-label">Zone de santé</label>
+                    <select class="form-select form-select-sm" id="filter-zone-sante" multiple size="4">
+                        <option value="">Toutes les zones</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-6 mb-2">
+                    <label for="filter-cas-min" class="form-label">Cas minimum</label>
+                    <input type="number" class="form-control form-control-sm" id="filter-cas-min" placeholder="Min">
+                </div>
+                <div class="col-12 col-md-6 mb-2">
+                    <label for="filter-cas-max" class="form-label">Cas maximum</label>
+                    <input type="number" class="form-control form-control-sm" id="filter-cas-max" placeholder="Max">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-6 mb-2">
+                    <label for="filter-deces-min" class="form-label">Décès minimum</label>
+                    <input type="number" class="form-control form-control-sm" id="filter-deces-min" placeholder="Min">
+                </div>
+                <div class="col-12 col-md-6 mb-2">
+                    <label for="filter-deces-max" class="form-label">Décès maximum</label>
+                    <input type="number" class="form-control form-control-sm" id="filter-deces-max" placeholder="Max">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 mb-2">
+                    <label for="search-input" class="form-label">Recherche globale</label>
+                    <input type="text" class="form-control form-control-sm" id="search-input" placeholder="Rechercher dans tous les champs...">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 mb-2 d-flex flex-column flex-md-row gap-2 justify-content-md-start align-items-center">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="applyFiltersToCharts()">
+                        <i class="bi bi-funnel"></i> Appliquer les filtres
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="resetAllFilters()">
+                        <i class="bi bi-arrow-clockwise"></i> Réinitialiser
+                    </button>
+                    <button type="button" class="btn btn-outline-info btn-sm" onclick="exportFilteredData()">
+                        <i class="bi bi-download"></i> Exporter
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div id="filter-indicator" class="mt-3 d-none">
+                        <div class="alert alert-info d-flex align-items-center">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <span id="filter-status">Filtres appliqués</span>
+                            <span id="filtered-count" class="badge bg-primary ms-2">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

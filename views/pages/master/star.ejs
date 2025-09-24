@@ -1,0 +1,314 @@
+<div class="d-flex justify-content-end mb-2">
+  <button class="btn btn-success btn-sm me-2" id="export-map-png">
+    <i class="bi bi-image"></i> Exporter la carte (PNG)
+  </button>
+  <button class="btn btn-info btn-sm me-2" id="export-geojson">
+    <i class="bi bi-file-earmark-arrow-down"></i> Exporter GeoJSON filtré
+  </button>
+  <button class="btn btn-outline-primary btn-sm me-2" onclick="window.displayColorLegend && window.displayColorLegend()">
+    📊 Afficher la légende
+  </button>
+  <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">
+    <i class="bi bi-sliders"></i> Panneau de configuration
+  </button>
+</div>
+<div class="content"  id="geo-mapping"></div>
+<%-include('../../partials/process-data-gui');-%>
+
+<!-- Script leaflet-image pour export PNG -->
+<script src="https://unpkg.com/leaflet-image/leaflet-image.js"></script>
+
+<script type="module">
+import { updateFilterOptions, applyFilters } from '/js/modules/choleraAnalysis.js';
+
+let sidebarData = [];
+
+async function loadCholeraDbJson() {
+    try {
+        const response = await fetch('/docs/cholera-db.json');
+        if (!response.ok) throw new Error('Erreur de chargement du fichier cholera-db.json');
+        sidebarData = await response.json();
+    } catch (e) {
+        console.error('Impossible de charger cholera-db.json', e);
+        sidebarData = [];
+    }
+}
+
+function getData() {
+    return sidebarData;
+}
+
+function initSidebarFilters() {
+    const data = getData();
+    if (data && data.length) {
+        updateFilterOptions(data);
+    }
+}
+
+function applySidebarFilters() {
+    console.log('Application des filtres du sidebar...');
+    
+    const data = getData();
+    console.log('Données disponibles:', data.length, 'enregistrements');
+    
+    const filtered = applyFilters(data);
+    console.log('Données filtrées:', filtered.length, 'enregistrements');
+    
+    const indicator = document.getElementById('filter-indicator');
+    const count = document.getElementById('filtered-count');
+    if (indicator && count) {
+        indicator.classList.remove('d-none');
+        count.textContent = filtered.length;
+    }
+
+    // Vérifier si un filtre est actif
+    const selectedProvinces = Array.from(document.getElementById('filter-province')?.selectedOptions || []).map(opt => opt.value).filter(v => v !== '');
+    const selectedDps = Array.from(document.getElementById('filter-dps')?.selectedOptions || []).map(opt => opt.value).filter(v => v !== '');
+    const selectedZones = Array.from(document.getElementById('filter-zone-sante')?.selectedOptions || []).map(opt => opt.value).filter(v => v !== '');
+    const hasActiveFilter = selectedProvinces.length > 0 || selectedDps.length > 0 || selectedZones.length > 0;
+
+    if (!hasActiveFilter) {
+        // Aucun filtre actif : coloration choléra de base
+        if (window.calculateCholeraStatisticsFromData && window.applyCholeraColoring) {
+            window.calculateCholeraStatisticsFromData(data);
+            window.applyCholeraColoring();
+        }
+        return;
+    }
+
+    // Projection spatiale sur la carte avec mise en évidence des zones filtrées :
+    if (window.calculateCholeraStatisticsFromData && window.applyCholeraColoring) {
+        console.log('Mise à jour des statistiques et de la coloration...');
+        window.calculateCholeraStatisticsFromData(filtered);
+        window.applyCholeraColoring();
+        // Mise en évidence des zones sélectionnées par les filtres
+        highlightFilteredZones(filtered, selectedProvinces, selectedDps, selectedZones);
+    } else {
+        console.log('Fonctions de carte non disponibles:', {
+            calculateCholeraStatisticsFromData: !!window.calculateCholeraStatisticsFromData,
+            applyCholeraColoring: !!window.applyCholeraColoring
+        });
+    }
+}
+
+function highlightFilteredZones(filteredData, selectedProvinces, selectedDps, selectedZones) {
+    if (!window.zonesLayer) {
+        console.log('zonesLayer non disponible');
+        return;
+    }
+    console.log('Mise en évidence des zones filtrées:', filteredData.length, 'enregistrements');
+    
+    // Créer un ensemble des zones à mettre en évidence
+    const zonesToHighlight = new Set();
+    filteredData.forEach(record => {
+        if (record.ZoneDeSante) {
+            zonesToHighlight.add(record.ZoneDeSante);
+        }
+    });
+    
+    // Parcourir toutes les couches de la carte
+    window.zonesLayer.eachLayer(layer => {
+        if (layer.feature && layer.feature.properties) {
+            const zoneName = layer.feature.properties.ZoneDeSante;
+            const dpsName = layer.feature.properties.DPS;
+            const provinceName = layer.feature.properties.Province;
+            
+            // Vérifier si la zone doit être mise en évidence
+            const shouldHighlight = zonesToHighlight.has(zoneName) ||
+                (selectedProvinces && selectedProvinces.length > 0 && selectedProvinces.includes(provinceName)) ||
+                (selectedDps && selectedDps.length > 0 && selectedDps.includes(dpsName)) ||
+                (selectedZones && selectedZones.length > 0 && selectedZones.includes(zoneName));
+                
+            if (shouldHighlight) {
+                // Style pour les zones sélectionnées
+                layer.setStyle({
+                    weight: 2, // Épaisseur de la bordure
+                    color: '#ff0000', // Couleur de bordure rouge
+                    fillColor: '#ff0000', // Couleur de remplissage rouge
+                    fillOpacity: 0.7, // Opacité du remplissage
+                    opacity: 1, // Opacité de la bordure
+                    fill: true
+                });
+                console.log('Zone sélectionnée:', zoneName);
+            } else {
+                // Style pour les zones non sélectionnées (blanc avec bordures blanches)
+                layer.setStyle({
+                    weight: 1, // Épaisseur de la bordure
+                    color: '#ffffff', // Bordure blanche
+                    fillColor: '#ffffff', // Fond blanc
+                    fillOpacity: 1, // Remplissage complètement opaque
+                    opacity: 1, // Bordure visible
+                    fill: true
+                });
+            }
+        }
+    });
+}
+
+function setupSidebarFilterEvents() {
+    console.log('Configuration des événements du sidebar...');
+    
+    const btnApply = document.querySelector('.offcanvas-body [onclick="applyFiltersToCharts()"]');
+    const btnReset = document.querySelector('.offcanvas-body [onclick="resetAllFilters()"]');
+    if (btnApply) btnApply.onclick = applySidebarFilters;
+    if (btnReset) btnReset.onclick = () => {
+        document.querySelectorAll('.offcanvas-body select, .offcanvas-body input').forEach(el => {
+            if (el.type === 'select-multiple' || el.multiple) {
+                Array.from(el.options).forEach(opt => opt.selected = false);
+            } else {
+                el.value = '';
+            }
+        });
+        initSidebarFilters();
+        applySidebarFilters();
+    };
+    
+    // Ajouter des event listeners pour les changements en temps réel
+    const filterElements = [
+        'filter-annee', 'filter-semaine', 'filter-province', 
+        'filter-zone-sante', 'filter-dps', 'filter-cas-min', 
+        'filter-cas-max', 'filter-deces-min', 'filter-deces-max', 'search-input'
+    ];
+    
+    filterElements.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('change', () => {
+                // Ajouter un délai pour éviter trop d'appels
+                setTimeout(applySidebarFilters, 100);
+            });
+            element.addEventListener('input', () => {
+                // Ajouter un délai pour éviter trop d'appels
+                setTimeout(applySidebarFilters, 300);
+            });
+        }
+    });
+    
+    // Vérifier que les fonctions de carte sont disponibles
+    const checkMapFunctions = () => {
+        if (window.calculateCholeraStatisticsFromData && window.applyCholeraColoring && window.zonesLayer) {
+            console.log('Toutes les fonctions de carte sont disponibles');
+            return true;
+        } else {
+            console.log('Fonctions de carte manquantes, nouvelle tentative dans 1 seconde...');
+            setTimeout(checkMapFunctions, 1000);
+            return false;
+        }
+    };
+    
+    // Vérifier immédiatement
+    checkMapFunctions();
+}
+
+// Fonction pour attendre que la carte soit prête
+function waitForMapReady() {
+    return new Promise((resolve) => {
+        const checkReady = () => {
+            if (window.calculateCholeraStatisticsFromData && 
+                window.applyCholeraColoring && 
+                window.zonesLayer) {
+                console.log('Carte prête pour les filtres');
+                resolve();
+            } else {
+                console.log('Carte pas encore prête, attente...');
+                setTimeout(checkReady, 500);
+            }
+        };
+        checkReady();
+    });
+}
+
+const offcanvas = document.getElementById('offcanvasScrolling');
+if (offcanvas) {
+    offcanvas.addEventListener('shown.bs.offcanvas', async () => {
+        if (!sidebarData.length) await loadCholeraDbJson();
+        initSidebarFilters();
+        setupSidebarFilterEvents();
+        // Suppression de l'appel automatique à applySidebarFilters
+        // await waitForMapReady();
+        // applySidebarFilters();
+    });
+}
+if (offcanvas && offcanvas.classList.contains('show')) {
+    (async () => {
+        if (!sidebarData.length) await loadCholeraDbJson();
+        initSidebarFilters();
+        setupSidebarFilterEvents();
+        // Suppression de l'appel automatique à applySidebarFilters
+        // await waitForMapReady();
+        // applySidebarFilters();
+    })();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Charger la couche custom.geo.json avant les zones de santé
+  fetch('./lib/leaflet/custom.geo.json')
+    .then(response => response.json())
+    .then(customData => {
+      window.customLayer = L.geoJSON(customData, {
+        style: { color: '#fff', weight: 2, opacity: 1, fillColor: '#fff', fillOpacity: 1 },
+        onEachFeature: function (feature, layer) {
+          if (feature.properties && feature.properties.name) {
+            layer.bindTooltip(feature.properties.name);
+          }
+        }
+      }).addTo(window.map);
+      // Suppression de l'appel automatique à applySidebarFilters
+      // if (typeof applySidebarFilters === 'function') {
+      //   applySidebarFilters();
+      // }
+    })
+    .catch(err => console.error('Erreur chargement custom.geo.json:', err));
+
+  // Export PNG (vue filtrée)
+  const exportBtn = document.getElementById('export-map-png');
+  if (exportBtn && window.map) {
+    exportBtn.addEventListener('click', function() {
+      // Forcer la coloration choléra juste avant l'export
+      if (window.applyCholeraColoring) {
+        window.applyCholeraColoring();
+      }
+      setTimeout(() => {
+        leafletImage(window.map, function(err, canvas) {
+          if (err) {
+            alert('Erreur lors de la génération de l\'image');
+            return;
+          }
+          var img = canvas.toDataURL('image/png');
+          var link = document.createElement('a');
+          var now = new Date();
+          var dateStr = now.toISOString().replace(/[:.]/g, '-').slice(0,16);
+          link.download = 'carte-filtrée-' + dateStr + '.png';
+          link.href = img;
+          link.click();
+        });
+      }, 400); // petit délai pour laisser le temps au rendu
+    });
+  }
+
+  // Export GeoJSON filtré
+  const exportGeoBtn = document.getElementById('export-geojson');
+  if (exportGeoBtn && window.zonesLayer) {
+    exportGeoBtn.addEventListener('click', function() {
+      // Récupérer les features visibles (filtrées)
+      const features = [];
+      window.zonesLayer.eachLayer(layer => {
+        if (layer.feature && layer.options.fillOpacity > 0.3) { // Seuil pour "visible"
+          features.push(layer.feature);
+        }
+      });
+      const geojson = {
+        type: 'FeatureCollection',
+        features: features
+      };
+      const dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(geojson, null, 2));
+      const dl = document.createElement('a');
+      dl.setAttribute('href', dataStr);
+      var now = new Date();
+      var dateStr = now.toISOString().replace(/[:.]/g, '-').slice(0,16);
+      dl.setAttribute('download', 'zones-filtrees-' + dateStr + '.geojson');
+      dl.click();
+    });
+  }
+});
+</script>

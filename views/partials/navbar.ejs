@@ -1,0 +1,13 @@
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+        <h2> <span class="icon icon-stack"></span> Manager connexion</h2>
+        <div class="scope-user-profile">
+            <% if(locals.userAccount){%>
+                <a href="#!">
+                    <span class="icon"></span><%=locals.userAccount.name+locals.userAccount.lastname%>
+                    <article class="user-avatar"></article>
+                </a>
+            <%}%>
+        </div>
+    </div>
+</nav>

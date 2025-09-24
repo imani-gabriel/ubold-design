@@ -1,0 +1,56 @@
+<h1>Master school S'inscrire</h1>
+<%if (locals.warnFlash){%>
+    <div style="background-color:orange;">
+        <% warnFlash.forEach((i,e)=>{%>
+            <p><%=i.desc%></p>
+        <%})%>
+    </div>
+<%}%>
+
+<%if (!locals.accesForm){%>
+    <form action="?auth=register&typeaccount=school" method="post">
+        <div>
+            <label for="inatSchool">N° d'Identification National</label>
+            <input type="text" class="form-control form-control-sm" name="inat" id="inat" placeholder="N° d'Identification National">
+        </div>
+
+        <div>
+            <label for="nameSchool">Nom complet de l'école(<small>collège, lycée, GS, CS, Intitut, etc...</small>)</label>
+            <input type="text" class="form-control form-control-sm" name="name" id="name" placeholder="Nom complet de l'école">
+        </div>
+        <div>
+            <label for="telSchool">contact phone number</label>
+            <input type="tel" class="form-control form-control-sm" name="telSchool" id="telSchool" required placeholder="Numéro de téléphone">
+        </div>
+        <div>
+            <input type="submit" name="senderbtn" value="Sing Up">
+            <button type="reset" class="btn btn-secondary btn-sm" name="senderbtn">Réinitialiser</button>
+        </div>
+    </form>
+    <a href="signin">Signin</a>
+<%}%>
+
+<%if ( locals.accesForm ){%>
+    <h3>CREEZ VOTRE COMPTE LARAH-SCHOOL : <%= accesForm  %></h3>
+
+    <form action="?auth=account&typeaccount=school" method="post">
+        <div>
+            <label for="loginAccount">E-mail</label>
+            <input type="email" class="form-control form-control-sm" name="loginAccount" id="loginAccount" required placeholder="Adresse email">
+        </div>
+        <div>
+            <label for="pswAccount">Mot de passe d'administration</label>
+            <input type="password" class="form-control form-control-sm" name="pswAccount" id="pswAccount" required placeholder="Mot de passe">
+        </div>
+        <div>
+            <label for="confpswAccount">Confirmer le mot de passe</label>
+            <input type="password" class="form-control form-control-sm" name="confpswAccount" id="confpswAccount" required placeholder="Confirmer le mot de passe">
+        </div>
+        <div>
+            <input type="submit" name="senderbtn" value="Sing Up">
+        </div>
+        <p>
+            <h3>Authentification</h3> 
+        </p>
+    </form>
+<%}%>

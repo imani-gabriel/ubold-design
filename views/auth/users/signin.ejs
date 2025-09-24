@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Master school s'identifier</h1>
+    <%if (locals.warnFlash){%>
+        <div style="background-color:orange;">
+            <% warnFlash.forEach((i,e)=>{%>
+                <p><%=i.desc%></p>
+            <%})%>
+        </div>
+    <%}%>
+    <form method="post">
+        <div>
+            <label for="loginAccount">pseudo user</label>
+            <input type="email" class="form-control form-control-sm" name="login" id="loginAccount" required placeholder="Pseudo utilisateur">
+        </div>
+        <div>
+            <label for="pswAccount">password user</label>
+            <input type="password" class="form-control form-control-sm" name="password" id="pswAccount" required placeholder="Mot de passe">
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary btn-sm" name="senderbtn">Connexion</button>
+        </div>
+    </form>
+
+    <a href="signup">Inscrivez-vous</a>
+</body>
+</html>

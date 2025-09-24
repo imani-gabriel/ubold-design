@@ -1,0 +1,69 @@
+<div id="data-preview-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content col-10">
+            <div class="modal-header">
+                <h4 class="modal-title">Prévisualisation des données</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table id="preview-datatable" class="table table-centered dt-responsive nowrap w-100">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="all">Année</th>
+                                                <th class="all">Semaine</th>
+                                                <th class="all">Province</th>
+                                                <th class="all">Nouvelle Province</th>
+                                                <th class="all">Zone</th>
+                                                <th class="all">Cas</th>
+                                                <th class="all">Décès</th>
+                                                <th class="all">Population</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Les données seront injectées ici dynamiquement -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary btn-sm" id="confirm-import">Confirmer l'import</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #data-preview-modal .modal-dialog {
+        max-height: 75vh;
+        margin: 1.75rem auto;
+    }
+    
+    #data-preview-modal .modal-content {
+        max-height: 75vh;
+    }
+    
+    #preview-datatable {
+        margin-bottom: 0;
+    }
+    
+    #preview-datatable thead th {
+        position: sticky;
+        top: 0;
+        background-color: #f8f9fa;
+        z-index: 1;
+    }
+
+    .table-centered td, .table-centered th {
+        vertical-align: middle;
+    }
+</style> 

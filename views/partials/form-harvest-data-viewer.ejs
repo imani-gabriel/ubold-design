@@ -1,0 +1,21 @@
+<div class="data-read">
+    <p class="fields">
+        <code id="indexTemp">
+            <label > <span class=" glyphicon icon-calendar"></span> Indice temporel </label>
+            <input type="number" class="form-control form-control-sm" onchange="testval(this)" id="year-work" min="1970" max="2022" step="1" placeholder="year">
+            <input type="number" class="form-control form-control-sm" onchange="testval(this)" id="week-work" min="1" max="52" step="1" placeholder="week">
+        </code>
+        <code id="indexSpac">
+            <label ><span class=" glyphicon icon-location"></span> Indice spacial</label>
+            <select class="form-select form-select-sm" name="geoIndex" id="geoIndex" onchange="testval(this)">
+                <option value="0">Indice géographique</option>
+            </select>
+        </code>
+        <code id="indexOther">
+            <label ><span class=" glyphicon icon-equalizer"></span> Autres indices</label>
+            <input type="text" class="form-control form-control-sm" name="sickCase" id="sick-case" placeholder="Cas" oninput="testval(this)">
+            <input type="text" class="form-control form-control-sm" name="sickDeath" id="sick-death" placeholder="Décès" oninput="testval(this)">
+        </code>
+        <button class="btn btn-sm btn-success" id="data-sender"><i class="glyphicon glyphicon-ok"></i></button>
+    </p>
+</div>

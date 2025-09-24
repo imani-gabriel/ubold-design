@@ -1,0 +1,115 @@
+<%-include('../inc/header');-%>
+    
+        <!-- Plugins css -->
+        
+        <!-- ApexCharts -->
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+        <!-- third party css -->
+        <link href="./ubold/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+        <link href="./ubold/css/responsive.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+        <link href="./ubold/css/flatpickr.min.css" rel="stylesheet" type="text/css" />
+        <link href="./ubold/css/selectize.bootstrap3.css" rel="stylesheet" type="text/css" />
+        <link href="./ubold/css/dropzone.min.css" rel="stylesheet" type="text/css" />
+        <link href="./ubold/css/dropify.min.css" rel="stylesheet" type="text/css" />
+    <body class="show">
+
+        <!-- Begin page -->
+        <div id="wrapper">
+            
+            <!-- ========== Menu ========== -->
+             <!--inclusion menu principal -->
+            <!-- ========== Menu End ========== -->
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+            <div class="content-page">
+
+                <!-- ========== Topbar Start ========== -->
+                <%-include('../partials/top-bar');-%> 
+                <!-- ========== Topbar End ========== -->
+
+                <div class="content">
+
+                    <!-- Start Content-->
+                    <%- body %>
+                    <!-- container -->
+
+                </div> <!-- content -->
+                <% if(targetPage === "auth") { %>
+                <!-- Footer Start -->
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div>2022-<script>document.write(new Date().getFullYear())</script> © INOHA Observe - <a href="https://www.inoha.ac.cd" target="_blank">inoha.ac.cd</a></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-none d-md-flex gap-4 align-item-center justify-content-md-end footer-links">
+                                    <a href="javascript: void(0);">A propos</a>
+                                    <a href="javascript: void(0);">Support technique</a>
+                                    <a href="javascript: void(0);">Contactez-nous</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+                <!-- end Footer -->
+                <% } %>
+
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+        </div>
+        <!-- END wrapper -->
+
+        <!-- Theme Settings -->
+        <%-include('../partials/theme-settings');-%>
+        <!-- End Theme Settings -->
+        
+        
+        <!-- end auth-fluid-->
+        <!-- Vendor js -->
+        <script src="./js/ubold/vendors.min.js"></script>
+
+        <!-- App js -->
+        <script src="./js/ubold/app.js"></script>
+
+        <% if(targetPage !== "auth") { %>
+        
+        <!-- Plugins js-->
+        <script src="./ubold/js/flatpickr.min.js"></script>
+        <script src="./ubold/js/apexcharts.min.js"></script>
+        <script src="./ubold/js/selectize.min.js"></script>
+
+        <!-- DataTables js -->
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
+        <!-- Dashboar 1 init js-->
+        <script src="./ubold/js/dashboard-1.init.js"></script>
+        <!-- <script src='https://cdn.plot.ly/plotly-3.0.1.min.js'></script> -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+        <!-- Make sure you put this AFTER Leaflet's CSS -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <script src="./js/master.js" defer></script>
+        <script src="./js/apiCholera.js" ></script>
+ 
+        <%-include('../partials/data-preview-modal');-%>
+        <%-include('../inc/footer');-%>
+            
+        <!-- Jquery Toast Plugin CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <!-- Jquery Toast Plugin JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <% } %>
+</body>
+</html>

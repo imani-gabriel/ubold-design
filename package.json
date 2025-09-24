@@ -1,0 +1,41 @@
+{
+  "name": "observa",
+  "version": "1.0.0",
+  "description": "Observatoire national",
+  "main": "src/app.js",
+  "scripts": {
+    "check-bundle": "node check-dist-bundle.js",
+    "dev:client": "mkdirp dist/client && node esbuild.build.js --watch",
+    "dev:server": "nodemon --ext js,json,ejs --ignore src/public/js/modules/ --ignore dist/client/ --ignore esbuild.build.js src/app.js",
+    "dev": "concurrently \"npm:dev:client\" \"npm:dev:server\"",
+    "start": "node src/app.js",
+    "build": "mkdirp dist/client && node esbuild.build.js",
+    "obs": "nodemon src/app.js"
+  },
+  "author": "gabriel'angelo",
+  "license": "ISC",
+  "dependencies": {
+    "exceljs": "^4.3.0",
+    "apexcharts": "^4.7.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.17.2",
+    "lodash": "^4.17.21",
+    "md5": "^2.3.0",
+    "mongoose": "^6.0.13",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^2.0.15",
+    "socket.io": "^4.6.1",
+    "uuid": "^8.3.2",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "esbuild": "^0.25.4",
+    "mkdirp": "^3.0.1"
+  }
+}

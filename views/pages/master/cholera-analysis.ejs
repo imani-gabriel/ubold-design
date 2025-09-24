@@ -1,0 +1,406 @@
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Analyse des données de choléra</h4>
+            </div>
+            <div class="card-body">
+                <!-- Section de filtrage -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card border-primary">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="bi bi-funnel"></i> Filtres d'analyse</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <!-- Filtres par année -->
+                                    <div class="col-md-2">
+                                        <label for="filter-annee" class="form-label">Année</label>
+                                        <select class="form-select form-select-sm" id="filter-annee" multiple size="4">
+                                            <option value="">Toutes les années</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Filtres par semaine -->
+                                    <div class="col-md-2">
+                                        <label for="filter-semaine" class="form-label">Semaine</label>
+                                        <select class="form-select form-select-sm" id="filter-semaine" multiple size="4">
+                                            <option value="">Toutes les semaines</option>
+                                            <% for(let i=1; i<=52; i++) { %>
+                                                <option value="<%= i %>">S<%= String(i).padStart(2, '0') %></option>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Filtres par province -->
+                                    <div class="col-md-3">
+                                        <label for="filter-province" class="form-label">Province</label>
+                                        <select class="form-select form-select-sm" id="filter-province" multiple size="4">
+                                            <option value="">Toutes les provinces</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Filtres par zone de santé -->
+                                    <div class="col-md-3">
+                                        <label for="filter-zone-sante" class="form-label">Zone de santé</label>
+                                        <select class="form-select form-select-sm" id="filter-zone-sante" multiple size="4">
+                                            <option value="">Toutes les zones</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Filtres par DPS -->
+                                    <div class="col-md-3">
+                                        <label for="filter-dps" class="form-label">DPS</label>
+                                        <select class="form-select form-select-sm" id="filter-dps" multiple size="4">
+                                            <option value="">Tous les DPS</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Filtres numériques -->
+                                    <div class="col-md-6">
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <label for="filter-cas-min" class="form-label">Cas minimum</label>
+                                                <input type="number" class="form-control form-control-sm" id="filter-cas-min" placeholder="Min">
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="filter-cas-max" class="form-label">Cas maximum</label>
+                                                <input type="number" class="form-control form-control-sm" id="filter-cas-max" placeholder="Max">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <label for="filter-deces-min" class="form-label">Décès minimum</label>
+                                                <input type="number" class="form-control form-control-sm" id="filter-deces-min" placeholder="Min">
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="filter-deces-max" class="form-label">Décès maximum</label>
+                                                <input type="number" class="form-control form-control-sm" id="filter-deces-max" placeholder="Max">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Barre de recherche -->
+                                    <div class="col-12">
+                                        <label for="search-input" class="form-label">Recherche globale</label>
+                                        <input type="text" class="form-control form-control-sm" id="search-input" placeholder="Rechercher dans tous les champs...">
+                                    </div>
+                                    
+                                    <!-- Boutons d'action -->
+                                    <div class="col-12">
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-primary btn-sm" onclick="applyFiltersToCharts()">
+                                                <i class="bi bi-funnel"></i> Appliquer les filtres
+                                            </button>
+                                            <button class="btn btn-outline-secondary btn-sm" onclick="resetAllFilters()">
+                                                <i class="bi bi-arrow-clockwise"></i> Réinitialiser
+                                            </button>
+                                            <button class="btn btn-outline-info btn-sm" onclick="exportFilteredData()">
+                                                <i class="bi bi-download"></i> Exporter
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Indicateur de filtrage actif -->
+                                <div id="filter-indicator" class="mt-3 d-none">
+                                    <div class="alert alert-info d-flex align-items-center">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        <span id="filter-status">Filtres appliqués</span>
+                                        <span id="filtered-count" class="badge bg-primary ms-2">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Section des graphiques -->
+                        <div id="analysis-results" class="mt-4">
+                            <div class="text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Chargement...</span>
+                                </div>
+                                <p class="mt-2">Chargement des données en cours...</p>
+                            </div>
+                        </div>
+                        
+                        <div id="error-message" class="alert alert-danger d-none mt-3" role="alert">
+                            <!-- Les messages d'erreur seront affichés ici -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chargement du module d'analyse -->
+<script type="module">
+    import { analyzeCholeraData, displayAnalysisResults, updateFilterOptions, applyFilters } from '/js/modules/choleraAnalysis.js';
+    
+    // Variable globale pour stocker les données originales
+    window.originalCholeraData = null;
+    window.filteredCholeraData = null;
+    
+    // Fonction pour appliquer les filtres aux graphiques
+    window.applyFiltersToCharts = async function() {
+        if (!window.originalCholeraData) {
+            console.error('Aucune donnée disponible');
+            return;
+        }
+        
+        try {
+            // Appliquer les filtres
+            window.filteredCholeraData = applyFilters(window.originalCholeraData);
+            
+            // Mettre à jour l'indicateur de filtrage
+            updateFilterIndicator(window.filteredCholeraData.length, window.originalCholeraData.length);
+            
+            // Recharger les graphiques avec les données filtrées
+            await reloadCharts(window.filteredCholeraData);
+            
+        } catch (error) {
+            console.error('Erreur lors de l\'application des filtres:', error);
+        }
+    };
+    
+    // Fonction pour réinitialiser tous les filtres
+    window.resetAllFilters = function() {
+        // Réinitialiser tous les champs de filtre
+        const filterElements = [
+            'filter-annee', 'filter-semaine', 'filter-province', 'filter-zone-sante', 'filter-dps',
+            'filter-cas-min', 'filter-cas-max', 'filter-deces-min', 'filter-deces-max',
+            'search-input'
+        ];
+        
+        filterElements.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                if (element.multiple) {
+                    // Pour les select multiples, désélectionner toutes les options
+                    Array.from(element.options).forEach(option => option.selected = false);
+                } else {
+                    element.value = '';
+                }
+            }
+        });
+        
+        // Recharger les graphiques avec les données originales
+        if (window.originalCholeraData) {
+            window.filteredCholeraData = window.originalCholeraData;
+            updateFilterIndicator(window.originalCholeraData.length, window.originalCholeraData.length);
+            reloadCharts(window.originalCholeraData);
+        }
+    };
+    
+    // Fonction pour exporter les données filtrées
+    window.exportFilteredData = function() {
+        const dataToExport = window.filteredCholeraData || window.originalCholeraData;
+        if (!dataToExport) {
+            alert('Aucune donnée à exporter');
+            return;
+        }
+        
+        const csvContent = convertToCSV(dataToExport);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `cholera_data_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+    
+    // Fonction utilitaire pour convertir en CSV
+    function convertToCSV(data) {
+        if (!data || data.length === 0) return '';
+        
+        const headers = Object.keys(data[0]);
+        const csvRows = [headers.join(',')];
+        
+        data.forEach(row => {
+            const values = headers.map(header => {
+                const value = row[header];
+                return typeof value === 'string' ? `"${value}"` : value;
+            });
+            csvRows.push(values.join(','));
+        });
+        
+        return csvRows.join('\n');
+    }
+    
+    // Fonction pour mettre à jour l'indicateur de filtrage
+    function updateFilterIndicator(filteredCount, totalCount) {
+        const indicator = document.getElementById('filter-indicator');
+        const status = document.getElementById('filter-status');
+        const countBadge = document.getElementById('filtered-count');
+        
+        if (filteredCount === totalCount) {
+            indicator.classList.add('d-none');
+        } else {
+            indicator.classList.remove('d-none');
+            status.textContent = `Filtres appliqués - ${filteredCount} sur ${totalCount} enregistrements`;
+            countBadge.textContent = filteredCount;
+        }
+    }
+    
+    // Fonction pour recharger les graphiques
+    async function reloadCharts(data) {
+        const container = document.getElementById('analysis-results');
+        if (!container) return;
+        
+        // Vider le conteneur
+        container.innerHTML = '';
+        
+        // Recharger les graphiques avec les nouvelles données
+        await displayAnalysisResults(data, 'analysis-results');
+    }
+    
+    // Fonction pour ajouter les écouteurs d'événements aux filtres
+    function addFilterEventListeners() {
+        const filterElements = [
+            'filter-annee', 'filter-semaine', 'filter-province', 'filter-zone-sante', 'filter-dps',
+            'filter-cas-min', 'filter-cas-max', 'filter-deces-min', 'filter-deces-max',
+            'search-input'
+        ];
+        
+        filterElements.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('change', () => {
+                    // Appliquer automatiquement les filtres après un délai
+                    clearTimeout(window.filterTimeout);
+                    window.filterTimeout = setTimeout(() => {
+                        window.applyFiltersToCharts();
+                    }, 500);
+                });
+                
+                // Pour la recherche, utiliser l'événement input
+                if (id === 'search-input') {
+                    element.addEventListener('input', () => {
+                        clearTimeout(window.filterTimeout);
+                        window.filterTimeout = setTimeout(() => {
+                            window.applyFiltersToCharts();
+                        }, 300);
+                    });
+                }
+            }
+        });
+    }
+    
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            // Lancer l'analyse automatiquement au chargement de la page
+            const data = await analyzeCholeraData();
+            
+            // Stocker les données originales
+            window.originalCholeraData = data;
+            window.filteredCholeraData = data;
+            
+            // Mettre à jour les options des filtres
+            updateFilterOptions(data);
+            
+            // Ajouter les écouteurs d'événements
+            addFilterEventListeners();
+            
+            // Afficher les résultats des graphiques
+            displayAnalysisResults(data, 'analysis-results');
+            
+            // Masquer le spinner de chargement
+            const spinner = document.querySelector('.spinner-border');
+            if (spinner) {
+                spinner.style.display = 'none';
+            }
+            
+        } catch (error) {
+            console.error('Erreur:', error);
+            const errorEl = document.getElementById('error-message');
+            if (errorEl) {
+                errorEl.textContent = `Erreur: ${error.message}`;
+                errorEl.classList.remove('d-none');
+                
+                // Afficher un message d'erreur convivial
+                const resultsEl = document.getElementById('analysis-results');
+                if (resultsEl) {
+                    resultsEl.innerHTML = `
+                        <div class="alert alert-warning">
+                            <h5>Impossible de charger les données</h5>
+                            <p>Veuillez vérifier que le fichier <code>cholera.json</code> existe dans le dossier <code>public/docs/</code>.</p>
+                            <p class="mb-0">Détails de l'erreur : ${error.message}</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+    });
+</script>
+
+<style>
+    /* Styles pour la pagination et les filtres */
+    .form-range {
+        cursor: pointer;
+    }
+    .pagination {
+        display: flex;
+        align-items: center;
+    }
+    #page-range {
+        width: 200px;
+        margin: 0 10px;
+    }
+    .table-responsive {
+        margin-bottom: 1rem;
+    }
+    .filter-section {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.25rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* Styles pour les selecteurs multiples */
+    .form-select[multiple] {
+        min-height: 120px;
+    }
+    
+    .form-select[multiple] option {
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .form-select[multiple] option:checked {
+        background-color: #007bff;
+        color: white;
+    }
+    
+    /* Animation pour les changements de graphiques */
+    .chart-container {
+        transition: opacity 0.3s ease-in-out;
+    }
+    
+    .chart-loading {
+        opacity: 0.6;
+    }
+    
+    /* Styles pour l'indicateur de filtrage */
+    #filter-indicator {
+        transition: all 0.3s ease;
+    }
+    
+    /* Responsive pour les filtres */
+    @media (max-width: 768px) {
+        .form-select[multiple] {
+            min-height: 80px;
+        }
+    }
+</style>
